@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -e
+
+DOTFILE_PATH=$( cd $( dirname "${BASH_SOURCE[0]}" ) ; pwd ; )
+if [ -d $DOTFILE_PATH/dotfiles_bak ]
+then
+  rmdir $DOTFILE_PATH/dotfiles_bak || { echo "Please remove manually $DOTFILE_PATH/dotfiles_bak dir after making sure it doesn't contain anything useful." ; exit 1 ; }
+fi
+mkdir $DOTFILE_PATH/dotfiles_bak
+
+cd ~
+
+deploy_core(){
+  target="$1"
+  link_name="$2"
+  [ "$link_name" = "" ] && link_name="$target"
+  target="$DOTFILE_PATH/$target"
+  if [ -e "$link_name" ] || [ -h "$link_name" ]
+  then
+    echo "Moving existing $link_name to $DOTFILE_PATH/dotfiles_bak"
+    mv "$link_name" $DOTFILE_PATH/dotfiles_bak
+  fi
+  mkdir -p "$(dirname $link_name)"
+  ln -sv $target ~/$link_name
+}
+
+deploy_core .vim
+deploy_core .vimrc
+deploy_core .bashrc
+deploy_core .bash_profile
+deploy_core bin

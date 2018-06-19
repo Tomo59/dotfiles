@@ -1,0 +1,5 @@
+#/bin/bash
+
+sed -e 's/Les fichiers \(.*\) et \(.*\) sont différents/vimdiff \1 \2/' -e 's/Files \(.*\) and \(.*\) differ/vimdiff \1 \2/'
+
+
